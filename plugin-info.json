@@ -5,6 +5,6 @@
   "description": "Displays the live progress of a Klipper/Moonraker 3D print: file name, progress bar, temperatures, elapsed & remaining time.",
   "version": "1.0.0",
   "author": "",
-  "settings": 
+  "settings": ""
    
 }
