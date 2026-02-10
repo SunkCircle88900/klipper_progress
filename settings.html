@@ -1,0 +1,23 @@
+<!-- Klipper Progress Plugin — Settings Template -->
+<!-- This file is rendered by InkyPi's settings system via Jinja2 -->
+
+<div class="settings-group">
+  <label class="settings-label" for="moonraker_url">
+    Moonraker URL
+    <span class="settings-hint">e.g. http://192.168.1.100:7125</span>
+  </label>
+  <input
+    type="text"
+    id="moonraker_url"
+    name="moonraker_url"
+    class="settings-input"
+    placeholder="http://192.168.1.100:7125"
+    value="{{ settings.moonraker_url if settings.moonraker_url else '' }}"
+    required
+  />
+  <p class="settings-description">
+    The address of your Moonraker API server. This is typically your Klipper host
+    (Raspberry Pi) IP address on port 7125. Make sure InkyPi can reach this address
+    over your local network.
+  </p>
+</div>

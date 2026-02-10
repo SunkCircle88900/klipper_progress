@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* ── Reset & base ─────────────────────────────────────────────── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 800px;
+      height: 480px;
+      background: #fff;
+      font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header bar ───────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 28px 10px;
+      border-bottom: 3px solid #111;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Printer icon (SVG inline) */
+    .printer-icon { flex-shrink: 0; }
+
+    .title-block .plugin-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .title-block .filename {
+      font-size: 14px;
+      color: #444;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    /* State badge */
+    .state-badge {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 2px solid #111;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .state-printing  { background: #111; color: #fff; }
+    .state-paused    { background: #fff; color: #111; border-style: dashed; }
+    .state-complete  { background: #111; color: #fff; }
+    .state-error     { background: #fff; color: #111; border-style: solid; }
+    .state-standby   { background: #fff; color: #777; border-color: #aaa; }
+
+    /* ── Progress section ─────────────────────────────────────────── */
+    .progress-section {
+      padding: 18px 28px 12px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #555;
+    }
+
+    .progress-pct {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    /* Progress bar */
+    .progress-track {
+      width: 100%;
+      height: 26px;
+      background: #e8e8e8;
+      border-radius: 4px;
+      border: 1px solid #bbb;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #111;
+      border-radius: 4px 0 0 4px;
+      transition: none;
+    }
+
+    /* Segment ticks */
+    .tick-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0 0;
+    }
+    .tick-row span {
+      font-size: 10px;
+      color: #aaa;
+    }
+
+    /* ── Stats grid ───────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 2px solid #111;
+      border-bottom: 2px solid #111;
+      margin: 0 28px;
+      flex: 1;
+    }
+
+    .stat-cell {
+      padding: 14px 12px;
+      border-right: 1px solid #ddd;
+    }
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .stat-unit {
+      font-size: 12px;
+      font-weight: 400;
+      color: #555;
+    }
+
+    .stat-target {
+      font-size: 12px;
+      color: #777;
+      margin-top: 2px;
+    }
+
+    /* Thermo micro-bar */
+    .thermo-bar {
+      height: 4px;
+      background: #eee;
+      border-radius: 2px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    .thermo-fill {
+      height: 100%;
+      background: #555;
+      border-radius: 2px;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────── */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 28px 12px;
+    }
+
+    .footer-left {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .footer-right {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* Layer info */
+    .layer-info {
+      font-size: 12px;
+      color: #555;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────────── -->
+  <div class="header">
+    <div class="header-left">
+      <!-- Inline printer SVG icon -->
+      <svg class="printer-icon" xmlns="http://www.w3.org/2000/svg"
+           width="36" height="36" viewBox="0 0 24 24"
+           fill="none" stroke="#111" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+        <circle cx="18" cy="11.5" r="0.5" fill="#111"/>
+      </svg>
+      <div class="title-block">
+        <div class="plugin-title">Klipper Print Monitor</div>
+        <div class="filename">{{ filename }}</div>
+      </div>
+    </div>
+
+    <div class="state-badge {{ state_class }}">{{ state_label }}</div>
+  </div>
+
+  <!-- ── Progress bar ───────────────────────────────────────────────── -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <span class="progress-label">Print Progress</span>
+      <span class="progress-pct">{{ progress_pct }}<span class="stat-unit">%</span></span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width: {{ progress_pct }}%;"></div>
+    </div>
+    <div class="tick-row">
+      <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+    </div>
+  </div>
+
+  <!-- ── Stats grid ─────────────────────────────────────────────────── -->
+  <div class="stats-grid">
+
+    <!-- Nozzle temp -->
+    <div class="stat-cell">
+      <div class="stat-label">🔥 Nozzle</div>
+      <div class="stat-value">{{ nozzle_actual }}<span class="stat-unit">°C</span></div>
+      <div class="stat-target">Target: {{ nozzle_target }}°C</div>
+      <div class="thermo-bar">
+        <div class="thermo-fill"
+             style="width: {% if nozzle_target > 0 %}{{ [[(nozzle_actual / nozzle_target * 100)|round(0)|int, 0]|max, 100]|min }}{% else %}0{% endif %}%;"></div>
+      </div>
+    </div>
+
+    <!-- Bed temp -->
+    <div class="stat-cell">
+      <div class="stat-label">🛏 Bed</div>
+      <div class="stat-value">{{ bed_actual }}<span class="stat-unit">°C</span></div>
+      <div class="stat-target">Target: {{ bed_target }}°C</div>
+      <div class="thermo-bar">
+        <div class="thermo-fill"
+             style="width: {% if bed_target > 0 %}{{ [[(bed_actual / bed_target * 100)|round(0)|int, 0]|max, 100]|min }}{% else %}0{% endif %}%;"></div>
+      </div>
+    </div>
+
+    <!-- Elapsed -->
+    <div class="stat-cell">
+      <div class="stat-label">⏱ Elapsed</div>
+      <div class="stat-value" style="font-size:22px;">{{ elapsed }}</div>
+      <div class="stat-target" style="margin-top:6px;">time printing</div>
+    </div>
+
+    <!-- Remaining -->
+    <div class="stat-cell">
+      <div class="stat-label">⏳ Remaining</div>
+      <div class="stat-value" style="font-size:22px;">{{ remaining }}</div>
+      <div class="stat-target" style="margin-top:6px;">estimated</div>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <div class="footer">
+    <div class="footer-left">
+      {% if layer_info %}
+        <span class="layer-info">{{ layer_info }}</span>
+      {% endif %}
+    </div>
+    <div class="footer-right">klipper + moonraker</div>
+  </div>
+
+</body>
+</html>

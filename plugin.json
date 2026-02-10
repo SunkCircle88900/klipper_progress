@@ -1,0 +1,17 @@
+{
+  "id": "klipper_progress",
+  "name": "Klipper Print Progress",
+  "description": "Displays the live progress of a Klipper/Moonraker 3D print: file name, progress bar, temperatures, elapsed & remaining time.",
+  "version": "1.0.0",
+  "author": "",
+  "settings": [
+    {
+      "name": "moonraker_url",
+      "label": "Moonraker URL",
+      "type": "text",
+      "default": "",
+      "required": true,
+      "description": "Base URL of your Moonraker server, e.g. http://192.168.1.100:7125"
+    }
+  ]
+}
