@@ -1,10 +1,6 @@
 {
-  "display_name": "klipper_progress",
+  "display_name": "Klipper Print Progress",
   "id": "klipper_progress",
-  "name": "Klipper Print Progress",
-  "description": "Displays the live progress of a Klipper/Moonraker 3D print: file name, progress bar, temperatures, elapsed & remaining time.",
-  "version": "1.0.0",
-  "author": "",
-  "settings": ""
-   
+  "class": "KlipperProgress",
+  "repository": "https://github.com/SunkCircle88900/klipper_progress.git"
 }
