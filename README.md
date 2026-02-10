@@ -28,7 +28,7 @@ An [InkyPi](https://github.com/fatihak/InkyPi) plugin that displays live 3D prin
 ```bash
 # SSH into your InkyPi Raspberry Pi
 cd ~/InkyPi/src/plugins
-git clone https://github.com/YOUR_USERNAME/InkyPi-KlipperProgress klipper_progress
+git clone https://github.com/SunkCircle88900/klipper_progress klipper_progress
 sudo systemctl restart inkypi.service
 ```
 
