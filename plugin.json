@@ -1,4 +1,5 @@
 {
+  "display_name": "klipper_progress",
   "id": "klipper_progress",
   "name": "Klipper Print Progress",
   "description": "Displays the live progress of a Klipper/Moonraker 3D print: file name, progress bar, temperatures, elapsed & remaining time.",
