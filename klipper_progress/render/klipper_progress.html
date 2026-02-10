@@ -267,6 +267,16 @@
       </div>
     </div>
 
+    <!-- outer bed temp-->
+    <div class="stat-cell">
+      <div class="stat-label">🛏 outer Bed</div>
+      <div class="stat-value">{{ outer_bed_actual }}<span class="stat-unit">°C</span></div>
+      <div class="stat-target">Target: {{ outer_bed_target }}°C</div>
+      <div class="thermo-bar">
+        <div class="thermo-fill"
+             style="width: {% if outer_bed_target > 0 %}{{ [[(outer_bed_actual / outer_bed_target * 100)|round(0)|int, 0]|max, 100]|min }}{% else %}0{% endif %}%;"></div>
+      </div>
+    </div>
     <!-- Elapsed -->
     <div class="stat-cell">
       <div class="stat-label">⏱ Elapsed</div>
